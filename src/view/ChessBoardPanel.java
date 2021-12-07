@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import components.ChessGridComponent;
 import model.ChessPiece;
+import model.GameMode;
 
 public class ChessBoardPanel extends JPanel {
     public static final int CHESS_COUNT = 8;
@@ -30,17 +31,13 @@ public class ChessBoardPanel extends JPanel {
         for (int i = 0; i < 8; ++i) {
             boolean flag = false;
             int nextX = row + dir[i][0], nextY = col + dir[i][1];
-            if (!isLocationInRange(nextX, nextY)) continue;
-            ChessPiece nextChessPiece = chessGrids[nextX][nextY].getChessPiece();
-            while (isLocationInRange(nextX, nextY)
-                    && nextChessPiece != null 
-                    && nextChessPiece == currentPlayer.op()) {
-                nextX += dir[i][0];
-                nextY += dir[i][1];
-                nextChessPiece = chessGrids[nextX][nextY].getChessPiece();
-                flag = true;
+            while (isLocationInRange(nextX, nextY)) {
+                ChessPiece nextChessPiece = chessGrids[nextX][nextY].getChessPiece();
+                if (nextChessPiece == currentPlayer.op()) flag = true;
+                else break;
+                nextX += dir[i][0]; nextY += dir[i][1];
             }
-            if (flag && isLocationInRange(nextX, nextY) && nextChessPiece != null)
+            if (flag && isLocationInRange(nextX, nextY) && chessGrids[nextX][nextY].getChessPiece() != null)
                 availableDir.add(i);
         }
         
@@ -61,7 +58,6 @@ public class ChessBoardPanel extends JPanel {
 
         initialChessGrids();//return empty chessboard
         initialGame();//add initial four chess
-
         repaint();
     }
 
@@ -103,17 +99,22 @@ public class ChessBoardPanel extends JPanel {
 
     public boolean canClickGrid(int row, int col, ChessPiece currentPlayer) {
         return chessGrids[row][col].getChessPiece() == null 
-                && getAvailableDir(row, col, currentPlayer).size() != 0;
+        && (GameFrame.controller.getMode() != GameMode.NON_CHEAT || getAvailableDir(row, col, currentPlayer).size() != 0);
     }
 
     public void reverseBoard(int row, int col) {
         ChessPiece currentPlayer = chessGrids[row][col].getChessPiece();
         List<Integer> availableDir = getAvailableDir(row, col, currentPlayer);
+        for (int i = 0; i < CHESS_COUNT; ++i)
+            for (int j = 0; j < CHESS_COUNT; ++j) 
+                chessGrids[i][j].setSwaped(false);
+
         for (int d : availableDir) {
             int nextX = row+dir[d][0], nextY = col+dir[d][1];
             while (isLocationInRange(nextX, nextY) 
                 && chessGrids[nextX][nextY].getChessPiece()==currentPlayer.op()) {
                     chessGrids[nextX][nextY].setChessPiece(currentPlayer);
+                    chessGrids[nextX][nextY].reversePiece();
                     nextX += dir[d][0];
                     nextY += dir[d][1];
             }
@@ -122,12 +123,17 @@ public class ChessBoardPanel extends JPanel {
     }
 
     public void recountAvailableGrids() {
+        boolean flag = false;
         for (int i = 0; i < CHESS_COUNT; ++i)
             for (int j = 0; j < CHESS_COUNT; ++j) {
-                if (this.canClickGrid(i, j, GameFrame.controller.getCurrentPlayer()))
+                if (this.canClickGrid(i, j, GameFrame.controller.getCurrentPlayer())) {
                     chessGrids[i][j].setCanClick(true);
-                else chessGrids[i][j].setCanClick(false);
+                    flag = true;
+                } else chessGrids[i][j].setCanClick(false);
             }
+        if (!flag) {
+            GameFrame.controller.swapPlayer();
+        }
         return ;
     }
 }

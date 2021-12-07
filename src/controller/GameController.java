@@ -1,8 +1,11 @@
 package controller;
 
+import javax.swing.JOptionPane;
+
 import components.ChessGridComponent;
 import view.ChessBoardPanel;
 import model.ChessPiece;
+import model.GameMode;
 import view.*;
 
 public class GameController {
@@ -13,13 +16,21 @@ public class GameController {
     private ChessPiece currentPlayer;
     private int blackScore;
     private int whiteScore;
+    private GameMode mode;
 
     public GameController(ChessBoardPanel gamePanel, StatusPanel statusPanel) {
         this.gamePanel = gamePanel;
         this.statusPanel = statusPanel;
         this.currentPlayer = ChessPiece.BLACK;
+        this.mode = GameMode.NON_CHEAT;
         blackScore = 2;
         whiteScore = 2;
+    }
+
+    private boolean endCheck() {
+        return blackScore == 0 
+        || whiteScore == 0 
+        || blackScore + whiteScore == ChessBoardPanel.CHESS_COUNT*ChessBoardPanel.CHESS_COUNT;
     }
 
     public void swapPlayer() {
@@ -27,7 +38,11 @@ public class GameController {
         currentPlayer = currentPlayer.op();
         statusPanel.setPlayerText(currentPlayer.name());
         statusPanel.setScoreText(blackScore, whiteScore);
-        gamePanel.recountAvailableGrids();
+        
+        if (endCheck()) {
+            //todo
+            JOptionPane.showMessageDialog(null, "End");
+        }
     }
 
 
@@ -55,6 +70,14 @@ public class GameController {
 
     public void setGamePanel(ChessBoardPanel gamePanel) {
         this.gamePanel = gamePanel;
+    }
+
+    public void setMode(GameMode mode) {
+        this.mode = mode;
+    }
+
+    public GameMode getMode() {
+        return mode;
     }
 
 

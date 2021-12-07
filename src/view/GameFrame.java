@@ -33,7 +33,7 @@ public class GameFrame extends JFrame {
 
         //获取窗口边框的长度，将这些值加到主窗口大小上，这能使窗口大小和预期相符
         Insets inset = this.getInsets();
-        this.setSize(frameSize + inset.left + inset.right, frameSize + inset.top + inset.bottom);
+        this.setSize((int)(frameSize*1.5) + inset.left + inset.right, frameSize + inset.top + inset.bottom);
 
         this.setLocationRelativeTo(null);
 
@@ -74,6 +74,9 @@ public class GameFrame extends JFrame {
             controller.writeDataToFile(filePath);
         });
 
+        CheatingButtonPanel cheatingPanel = new CheatingButtonPanel();
+        cheatingPanel.setLocation(saveGameBtn.getX()+saveGameBtn.getWidth()+30, saveGameBtn.getY());
+        this.add(cheatingPanel);
 
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

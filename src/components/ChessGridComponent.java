@@ -4,6 +4,10 @@ import model.*;
 import view.GameFrame;
 
 import java.awt.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import constant.ColorCollection;
 
@@ -15,6 +19,7 @@ public class ChessGridComponent extends BasicComponent {
     private int row;
     private int col;
     private boolean canClick;
+    private boolean swaped;
 
     public ChessGridComponent(int row, int col) {
         this.setSize(gridSize, gridSize);
@@ -31,7 +36,9 @@ public class ChessGridComponent extends BasicComponent {
             if (this.chessPiece == null) {
                 this.chessPiece = GameFrame.controller.getCurrentPlayer();
                 GameFrame.controller.getGamePanel().reverseBoard(row, col);
-                GameFrame.controller.swapPlayer();
+                if (GameFrame.controller.getMode() == GameMode.NON_CHEAT)
+                    GameFrame.controller.swapPlayer();
+                GameFrame.controller.getGamePanel().recountAvailableGrids();
             }
             repaint();
         }
@@ -44,6 +51,14 @@ public class ChessGridComponent extends BasicComponent {
 
     public void setChessPiece(ChessPiece chessPiece) {
         this.chessPiece = chessPiece;
+    }
+
+    public boolean isSwaped() {
+        return swaped;
+    }
+
+    public void setSwaped(boolean swaped) {
+        this.swaped = swaped;
     }
 
     public int getRow() {
@@ -69,9 +84,23 @@ public class ChessGridComponent extends BasicComponent {
         if (this.chessPiece != null) {
             g.setColor(chessPiece.getColor());
             g.fillOval((gridSize - chessSize) / 2, (gridSize - chessSize) / 2, chessSize, chessSize);
+            // g.fillArc((gridSize - chessSize) / 2, (gridSize - chessSize) / 2, chessSize, chessSize, 45, 135);
         }
+        
     }
 
+    public void reversePiece() {
+        Graphics2D g = (Graphics2D)this.getGraphics();
+        g.setColor(chessPiece.getColor());
+        for (int i = 180; i < 361; ++i) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            g.fillArc((gridSize - chessSize) / 2, (gridSize - chessSize) / 2, chessSize, chessSize, 0, i);
+        }
+    }
 
     @Override
     public void paintComponent(Graphics g) {
