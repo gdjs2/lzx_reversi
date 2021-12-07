@@ -25,6 +25,7 @@ public class ChessBoardPanel extends JPanel {
         for (int i = 0; i < 8; ++i) {
             boolean flag = false;
             int nextX = row + dir[i][0], nextY = col + dir[i][1];
+            if (!isLocationInRange(nextX, nextY)) continue;
             ChessPiece nextChessPiece = chessGrids[nextX][nextY].getChessPiece();
             while (isLocationInRange(nextX, nextY)
                     && nextChessPiece != null 
@@ -97,7 +98,8 @@ public class ChessBoardPanel extends JPanel {
 
     public boolean canClickGrid(int row, int col, ChessPiece currentPlayer) {
         //todo: complete this method
-        return getAvailableDir(row, col, currentPlayer).size() != 0;
+        return chessGrids[row][col].getChessPiece() == null 
+                && getAvailableDir(row, col, currentPlayer).size() != 0;
     }
 
     public void reverseBoard(int row, int col) {
@@ -113,5 +115,15 @@ public class ChessBoardPanel extends JPanel {
             }
         }
         repaint();
+    }
+
+    public void recountAvailableGrids() {
+        for (int i = 0; i < CHESS_COUNT; ++i)
+            for (int j = 0; j < CHESS_COUNT; ++j) {
+                if (this.canClickGrid(i, j, GameFrame.controller.getCurrentPlayer()))
+                    chessGrids[i][j].setCanClick(true);
+                else chessGrids[i][j].setCanClick(false);
+            }
+        return ;
     }
 }

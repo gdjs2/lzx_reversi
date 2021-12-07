@@ -24,9 +24,10 @@ public class GameController {
 
     public void swapPlayer() {
         countScore();
-        currentPlayer = (currentPlayer == ChessPiece.BLACK) ? ChessPiece.WHITE : ChessPiece.BLACK;
+        currentPlayer = currentPlayer.op();
         statusPanel.setPlayerText(currentPlayer.name());
         statusPanel.setScoreText(blackScore, whiteScore);
+        gamePanel.recountAvailableGrids();
     }
 
 

@@ -5,14 +5,16 @@ import view.GameFrame;
 
 import java.awt.*;
 
+import constant.ColorCollection;
+
 public class ChessGridComponent extends BasicComponent {
     public static int chessSize;
     public static int gridSize;
-    public static Color gridColor = new Color(255, 150, 50);
 
     private ChessPiece chessPiece;
     private int row;
     private int col;
+    private boolean canClick;
 
     public ChessGridComponent(int row, int col) {
         this.setSize(gridSize, gridSize);
@@ -52,8 +54,17 @@ public class ChessGridComponent extends BasicComponent {
         return col;
     }
 
+    public boolean isCanClick() {
+        return canClick;
+    }
+
+    public void setCanClick(boolean canClick) {
+        this.canClick = canClick;
+    }
+
     public void drawPiece(Graphics g) {
-        g.setColor(gridColor);
+        if (this.canClick) g.setColor(ColorCollection.gridColorAct);
+        else g.setColor(ColorCollection.gridColorInact);
         g.fillRect(1, 1, this.getWidth() - 2, this.getHeight() - 2);
         if (this.chessPiece != null) {
             g.setColor(chessPiece.getColor());
