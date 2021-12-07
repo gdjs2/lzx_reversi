@@ -11,8 +11,13 @@ import components.ChessGridComponent;
 import model.ChessPiece;
 
 public class ChessBoardPanel extends JPanel {
-    private final int CHESS_COUNT = 8;
+    public static final int CHESS_COUNT = 8;
     private ChessGridComponent[][] chessGrids;
+
+    public ChessGridComponent[][] getChessGrids() {
+        return chessGrids;
+    }
+
     private static final int[][] dir = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
     private boolean isLocationInRange(int row, int col) {
@@ -97,7 +102,6 @@ public class ChessBoardPanel extends JPanel {
 
 
     public boolean canClickGrid(int row, int col, ChessPiece currentPlayer) {
-        //todo: complete this method
         return chessGrids[row][col].getChessPiece() == null 
                 && getAvailableDir(row, col, currentPlayer).size() != 0;
     }

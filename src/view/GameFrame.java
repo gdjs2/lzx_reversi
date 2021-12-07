@@ -11,6 +11,21 @@ public class GameFrame extends JFrame {
     private ChessBoardPanel chessBoardPanel;
     private StatusPanel statusPanel;
 
+    private void initBasicComponent() {
+        chessBoardPanel = new ChessBoardPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.7));
+        chessBoardPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, (this.getHeight() - chessBoardPanel.getHeight()) / 3);
+
+        statusPanel = new StatusPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.1));
+        statusPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, 0);
+        controller = new GameController(chessBoardPanel, statusPanel);
+        controller.setGamePanel(chessBoardPanel);
+
+        chessBoardPanel.recountAvailableGrids();
+
+        this.add(chessBoardPanel);
+        this.add(statusPanel);
+    }
+
     public GameFrame(int frameSize) {
 
         this.setTitle("2021F CS102A Project Reversi");
@@ -22,17 +37,7 @@ public class GameFrame extends JFrame {
 
         this.setLocationRelativeTo(null);
 
-
-        chessBoardPanel = new ChessBoardPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.7));
-        chessBoardPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, (this.getHeight() - chessBoardPanel.getHeight()) / 3);
-
-        statusPanel = new StatusPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.1));
-        statusPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, 0);
-        controller = new GameController(chessBoardPanel, statusPanel);
-        controller.setGamePanel(chessBoardPanel);
-
-        this.add(chessBoardPanel);
-        this.add(statusPanel);
+        initBasicComponent();
 
         JButton restartBtn = new JButton("Restart");
         restartBtn.setSize(120, 50);
@@ -44,19 +49,9 @@ public class GameFrame extends JFrame {
             this.remove(chessBoardPanel);
             this.remove(statusPanel);
 
-            chessBoardPanel = new ChessBoardPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.7));
-            chessBoardPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, (this.getHeight() - chessBoardPanel.getHeight()) / 3);
+            initBasicComponent();
 
-            statusPanel = new StatusPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.1));
-            statusPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, 0);
-
-            controller = new GameController(chessBoardPanel, statusPanel);
-            controller.setGamePanel(chessBoardPanel);
-
-            this.add(chessBoardPanel);
-            this.add(statusPanel);
             this.repaint();
-
         });
 
         JButton loadGameBtn = new JButton("Load");

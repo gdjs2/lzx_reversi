@@ -32,17 +32,15 @@ public class GameController {
 
 
     public void countScore() {
-        //todo: modify the countScore method
-        for (int i = 0; i < 8; i++){
-            for (int j = 0; j < 8; j++){
-                ChessGridComponent chessGridComponent = new ChessGridComponent(i, j);
-                if (chessGridComponent.getCol() == 1)
-                    blackScore++;
-                if (chessGridComponent.getCol() == -1)
-                    whiteScore++;
+        blackScore = whiteScore = 0;
+        int boardSize = ChessBoardPanel.CHESS_COUNT;
+        ChessGridComponent[][] board = gamePanel.getChessGrids();
+        for (int i = 0; i < boardSize; ++i)
+            for (int j = 0; j < boardSize; ++j) {
+                if (board[i][j].getChessPiece() == ChessPiece.BLACK) ++blackScore;
+                else if (board[i][j].getChessPiece() == ChessPiece.WHITE) ++whiteScore;
             }
-        }
-
+        return ;
     }
 
 
