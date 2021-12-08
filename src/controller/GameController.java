@@ -12,20 +12,30 @@ public class GameController {
 
 
     private ChessBoardPanel gamePanel;
+    private StartFrame startFrame;
     private StatusPanel statusPanel;
     private ChessPiece currentPlayer;
     private int blackScore;
     private int whiteScore;
     private GameMode mode;
 
-    public GameController(ChessBoardPanel gamePanel, StatusPanel statusPanel) {
+    public GameController(ChessBoardPanel gamePanel, StatusPanel statusPanel, StartFrame startFrame) {
         this.gamePanel = gamePanel;
         this.statusPanel = statusPanel;
         this.currentPlayer = ChessPiece.BLACK;
         this.mode = GameMode.NON_CHEAT;
+        this.startFrame = startFrame;
         blackScore = 2;
         whiteScore = 2;
     }
+
+    public StatusPanel getStatusPanel() {
+        return statusPanel;
+    }
+
+    // public void setStatusPanel(StatusPanel statusPanel) {
+    //     this.statusPanel = statusPanel;
+    // }
 
     private boolean endCheck() {
         return blackScore == 0 
@@ -78,6 +88,10 @@ public class GameController {
 
     public GameMode getMode() {
         return mode;
+    }
+
+    public StartFrame getStartFrame() {
+        return startFrame;
     }
 
 

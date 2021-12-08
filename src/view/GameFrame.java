@@ -10,23 +10,39 @@ public class GameFrame extends JFrame {
     public static GameController controller;
     private ChessBoardPanel chessBoardPanel;
     private StatusPanel statusPanel;
+    private ControlPanel controlPanel;
+    private StartFrame startFrame;
 
     private void initBasicComponent() {
         chessBoardPanel = new ChessBoardPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.7));
-        chessBoardPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, (this.getHeight() - chessBoardPanel.getHeight()) / 3);
+        chessBoardPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 8, (this.getHeight() - chessBoardPanel.getHeight()) / 2);
 
-        statusPanel = new StatusPanel((int) (this.getWidth() * 0.8), (int) (this.getHeight() * 0.1));
-        statusPanel.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, 0);
-        controller = new GameController(chessBoardPanel, statusPanel);
+        statusPanel = new StatusPanel((int) (this.getWidth() * 0.4 - (this.getWidth() - chessBoardPanel.getWidth()) / 8), (int) (chessBoardPanel.getHeight() * 0.5));
+        statusPanel.setLocation((int)(0.6 * this.getWidth()), (this.getHeight() - chessBoardPanel.getHeight()) / 2);
+
+        controller = new GameController(chessBoardPanel, statusPanel, startFrame);
         controller.setGamePanel(chessBoardPanel);
+
+        controlPanel = new ControlPanel(this, (int) (this.getWidth() * 0.4 - (this.getWidth() - chessBoardPanel.getWidth()) / 8), (int) (chessBoardPanel.getHeight() * 0.5));
+        controlPanel.setLocation((int)(0.6 * this.getWidth()), (int)(this.getHeight()/2));
 
         chessBoardPanel.recountAvailableGrids();
 
         this.add(chessBoardPanel);
         this.add(statusPanel);
+        this.add(controlPanel);
     }
 
-    public GameFrame(int frameSize) {
+    public void restart() {
+        this.remove(chessBoardPanel);
+		this.remove(statusPanel);
+	
+		initBasicComponent();
+	
+		this.repaint();
+    }
+
+    public GameFrame(int frameSize, StartFrame startFrame) {
 
         this.setTitle("2021F CS102A Project Reversi");
         this.setLayout(null);
@@ -35,51 +51,12 @@ public class GameFrame extends JFrame {
         Insets inset = this.getInsets();
         this.setSize((int)(frameSize*1.5) + inset.left + inset.right, frameSize + inset.top + inset.bottom);
 
+        this.startFrame = startFrame;
         this.setLocationRelativeTo(null);
 
         initBasicComponent();
 
-        JButton restartBtn = new JButton("Restart");
-        restartBtn.setSize(120, 50);
-        restartBtn.setLocation((this.getWidth() - chessBoardPanel.getWidth()) / 2, (this.getHeight() + chessBoardPanel.getHeight()) / 2);
-        add(restartBtn);
-        restartBtn.addActionListener(e -> {
-            System.out.println("click restart Btn");
-
-            this.remove(chessBoardPanel);
-            this.remove(statusPanel);
-
-            initBasicComponent();
-
-            this.repaint();
-        });
-
-        JButton loadGameBtn = new JButton("Load");
-        loadGameBtn.setSize(120, 50);
-        loadGameBtn.setLocation(restartBtn.getX()+restartBtn.getWidth()+30, restartBtn.getY());
-        add(loadGameBtn);
-        loadGameBtn.addActionListener(e -> {
-            System.out.println("clicked Load Btn");
-            String filePath = JOptionPane.showInputDialog(this, "input the path here");
-            controller.readFileData(filePath);
-        });
-
-        JButton saveGameBtn = new JButton("Save");
-        saveGameBtn.setSize(120, 50);
-        saveGameBtn.setLocation(loadGameBtn.getX()+restartBtn.getWidth()+30, restartBtn.getY());
-        add(saveGameBtn);
-        saveGameBtn.addActionListener(e -> {
-            System.out.println("clicked Save Btn");
-            String filePath = JOptionPane.showInputDialog(this, "input the path here");
-            controller.writeDataToFile(filePath);
-        });
-
-        CheatingButtonPanel cheatingPanel = new CheatingButtonPanel();
-        cheatingPanel.setLocation(saveGameBtn.getX()+saveGameBtn.getWidth()+30, saveGameBtn.getY());
-        this.add(cheatingPanel);
-
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
     }
 }

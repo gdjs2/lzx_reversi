@@ -8,8 +8,10 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import components.ChessGridComponent;
+import constant.FilePath;
 import model.ChessPiece;
 import model.GameMode;
+import utility.SoundUtility;
 
 public class ChessBoardPanel extends JPanel {
     public static final int CHESS_COUNT = 8;
@@ -113,6 +115,9 @@ public class ChessBoardPanel extends JPanel {
             int nextX = row+dir[d][0], nextY = col+dir[d][1];
             while (isLocationInRange(nextX, nextY) 
                 && chessGrids[nextX][nextY].getChessPiece()==currentPlayer.op()) {
+                    
+                    SoundUtility.playSE(FilePath.reverseSE2);
+
                     chessGrids[nextX][nextY].setChessPiece(currentPlayer);
                     chessGrids[nextX][nextY].reversePiece();
                     nextX += dir[d][0];

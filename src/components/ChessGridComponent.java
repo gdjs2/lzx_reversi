@@ -4,10 +4,6 @@ import model.*;
 import view.GameFrame;
 
 import java.awt.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
 
 import constant.ColorCollection;
 
@@ -33,7 +29,7 @@ public class ChessGridComponent extends BasicComponent {
         System.out.printf("%s clicked (%d, %d)\n", GameFrame.controller.getCurrentPlayer(), row, col);
         //todo: complete mouse click method
         if (GameFrame.controller.canClick(row, col)) {
-            if (this.chessPiece == null) {
+            if (this.chessPiece == null) {                
                 this.chessPiece = GameFrame.controller.getCurrentPlayer();
                 GameFrame.controller.getGamePanel().reverseBoard(row, col);
                 if (GameFrame.controller.getMode() == GameMode.NON_CHEAT)

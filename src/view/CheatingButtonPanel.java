@@ -30,10 +30,16 @@ public class CheatingButtonPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JRadioButton button = (JRadioButton)(e.getSource());
-				if (button == nonCheat) GameFrame.controller.setMode(GameMode.NON_CHEAT);
+				if (button == nonCheat) {
+					GameFrame.controller.setMode(GameMode.NON_CHEAT);
+					GameFrame.controller.getStatusPanel().getCheatLabel().setVisible(false);
+				}
 				// else if (button == whiteCheat) GameFrame.controller.setMode(GameMode.WHITE_CHEAT);
 				// else if (button == blackCheat) GameFrame.controller.setMode(GameMode.BLACK_CHEAT);
-				else if (button == cheat) GameFrame.controller.setMode(GameMode.CHEAT);
+				else if (button == cheat) {
+					GameFrame.controller.setMode(GameMode.CHEAT);
+					GameFrame.controller.getStatusPanel().getCheatLabel().setVisible(true);
+				}
 
 				GameFrame.controller.getGamePanel().recountAvailableGrids();
 				GameFrame.controller.getGamePanel().repaint();
