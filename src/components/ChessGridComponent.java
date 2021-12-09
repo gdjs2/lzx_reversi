@@ -88,13 +88,14 @@ public class ChessGridComponent extends BasicComponent {
     public void reversePiece() {
         Graphics2D g = (Graphics2D)this.getGraphics();
         g.setColor(chessPiece.getColor());
+        int baseLine = (int)(Math.random()*270);
         for (int i = 180; i < 361; ++i) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            g.fillArc((gridSize - chessSize) / 2, (gridSize - chessSize) / 2, chessSize, chessSize, 0, i);
+            g.fillArc((gridSize - chessSize) / 2, (gridSize - chessSize) / 2, chessSize, chessSize, baseLine, i);
         }
     }
 
