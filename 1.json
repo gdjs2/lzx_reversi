@@ -1,0 +1,170 @@
+{
+  "isFinished": false,
+  "winnerOrPlayer": "BLACK",
+  "steps": [
+    {
+      "putPosition": {
+        "x": 3,
+        "y": 5
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 3,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "putPosition": {
+        "x": 2,
+        "y": 5
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 3,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "putPosition": {
+        "x": 1,
+        "y": 5
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 2,
+          "y": 5
+        }
+      ]
+    },
+    {
+      "putPosition": {
+        "x": 1,
+        "y": 6
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 2,
+          "y": 5
+        }
+      ]
+    },
+    {
+      "putPosition": {
+        "x": 2,
+        "y": 4
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 3,
+          "y": 4
+        }
+      ]
+    },
+    {
+      "putPosition": {
+        "x": 4,
+        "y": 5
+      },
+      "mode": "NON_CHEAT",
+      "flipPosition": [
+        {
+          "x": 3,
+          "y": 5
+        },
+        {
+          "x": 4,
+          "y": 4
+        }
+      ]
+    }
+  ],
+  "board": [
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      "BLACK",
+      "WHITE",
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      "BLACK",
+      "WHITE",
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      "BLACK",
+      "BLACK",
+      "WHITE",
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      "WHITE",
+      "WHITE",
+      "WHITE",
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  ]
+}

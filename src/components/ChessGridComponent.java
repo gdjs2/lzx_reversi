@@ -4,6 +4,9 @@ import model.*;
 import view.GameFrame;
 
 import java.awt.*;
+import java.lang.reflect.InvocationTargetException;
+
+import javax.swing.SwingUtilities;
 
 import constant.ColorCollection;
 
@@ -15,7 +18,6 @@ public class ChessGridComponent extends BasicComponent {
     private int row;
     private int col;
     private boolean canClick;
-    private boolean swaped;
 
     public ChessGridComponent(int row, int col) {
         this.setSize(gridSize, gridSize);
@@ -24,13 +26,21 @@ public class ChessGridComponent extends BasicComponent {
         this.col = col;
     }
 
+    private ChessGridComponent(ChessGridComponent c) {
+        this.chessPiece = c.chessPiece;
+        this.row = c.row;
+        this.col = c.col;
+        this.canClick = c.canClick;
+    }
+
     @Override
     public void onMouseClicked() {
         System.out.printf("%s clicked (%d, %d)\n", GameFrame.controller.getCurrentPlayer(), row, col);
         //todo: complete mouse click method
         if (GameFrame.controller.canClick(row, col)) {
-            if (this.chessPiece == null) {                
+            if (this.chessPiece == null) {
                 this.chessPiece = GameFrame.controller.getCurrentPlayer();
+                paintImmediately(0, 0, this.getWidth(), this.getHeight());
                 GameFrame.controller.getGamePanel().reverseBoard(row, col);
                 if (GameFrame.controller.getMode() == GameMode.NON_CHEAT)
                     GameFrame.controller.swapPlayer();
@@ -47,14 +57,6 @@ public class ChessGridComponent extends BasicComponent {
 
     public void setChessPiece(ChessPiece chessPiece) {
         this.chessPiece = chessPiece;
-    }
-
-    public boolean isSwaped() {
-        return swaped;
-    }
-
-    public void setSwaped(boolean swaped) {
-        this.swaped = swaped;
     }
 
     public int getRow() {
@@ -86,6 +88,8 @@ public class ChessGridComponent extends BasicComponent {
     }
 
     public void reversePiece() {
+        chessPiece = chessPiece.op();
+
         Graphics2D g = (Graphics2D)this.getGraphics();
         g.setColor(chessPiece.getColor());
         int baseLine = (int)(Math.random()*270);
@@ -105,5 +109,7 @@ public class ChessGridComponent extends BasicComponent {
         drawPiece(g);
     }
 
-
+    // private ChessGridComponent clone() {
+    //     return new ChessGridComponent(this);
+    // }
 }

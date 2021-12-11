@@ -23,14 +23,10 @@ public class GameFrame extends JFrame {
         controller = new GameController(chessBoardPanel, statusPanel, startFrame);
         controller.setGamePanel(chessBoardPanel);
 
-        controlPanel = new ControlPanel(this, (int) (this.getWidth() * 0.4 - (this.getWidth() - chessBoardPanel.getWidth()) / 8), (int) (chessBoardPanel.getHeight() * 0.5));
-        controlPanel.setLocation((int)(0.6 * this.getWidth()), (int)(this.getHeight()/2));
-
         chessBoardPanel.recountAvailableGrids();
 
         this.add(chessBoardPanel);
         this.add(statusPanel);
-        this.add(controlPanel);
     }
 
     public void restart() {
@@ -55,6 +51,10 @@ public class GameFrame extends JFrame {
         this.setLocationRelativeTo(null);
 
         initBasicComponent();
+
+        controlPanel = new ControlPanel(this, (int) (this.getWidth() * 0.4 - (this.getWidth() - chessBoardPanel.getWidth()) / 8), (int) (chessBoardPanel.getHeight() * 0.5));
+        controlPanel.setLocation((int)(0.6 * this.getWidth()), (int)(this.getHeight()/2));
+        this.add(controlPanel);
 
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

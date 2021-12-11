@@ -1,0 +1,12 @@
+{
+	"isFinished": false,
+	"winnerOrPlayer": "ChessPiece.BLACK",
+	"steps": [
+		{"x": 1, "y": 1},
+		{"x": 2, "y": 2}
+	],
+	"board": [
+		["ChessPiece.BLACK", "ChessPiece.BLACK", "ChessPiece.BLACK"],
+		["ChessPiece.BLACK", "ChessPiece.BLACK", "ChessPiece.BLACK"]
+	]
+}

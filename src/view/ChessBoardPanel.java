@@ -3,7 +3,9 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 
@@ -11,14 +13,40 @@ import components.ChessGridComponent;
 import constant.FilePath;
 import model.ChessPiece;
 import model.GameMode;
+import model.Position;
+import model.Step;
 import utility.SoundUtility;
 
 public class ChessBoardPanel extends JPanel {
     public static final int CHESS_COUNT = 8;
     private ChessGridComponent[][] chessGrids;
+    private Stack<Step> stepStack;
 
     public ChessGridComponent[][] getChessGrids() {
         return chessGrids;
+    }
+
+    public boolean equal(ChessPiece[][] board) {
+        for (int i = 0; i < CHESS_COUNT; ++i)
+            for (int j = 0; j < CHESS_COUNT; ++j)
+                if (board[i][j] != chessGrids[i][j].getChessPiece())
+                    return false;
+        return true;
+    }
+
+    public Step[] getSteps() {
+        Step[] steps = new Step[stepStack.size()];
+        for (int i = 0; i < stepStack.size(); ++i)
+            steps[i] = stepStack.get(i);
+        return steps;
+    }
+
+    public ChessPiece[][] getBoard() {
+        ChessPiece[][] board = new ChessPiece[CHESS_COUNT][CHESS_COUNT];
+        for (int i = 0; i < CHESS_COUNT; ++i)
+            for (int j = 0; j < CHESS_COUNT; ++j)
+                board[i][j] = chessGrids[i][j].getChessPiece();
+        return board;
     }
 
     private static final int[][] dir = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}, {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
@@ -60,6 +88,7 @@ public class ChessBoardPanel extends JPanel {
 
         initialChessGrids();//return empty chessboard
         initialGame();//add initial four chess
+        stepStack = new Stack<>();
         repaint();
     }
 
@@ -105,11 +134,10 @@ public class ChessBoardPanel extends JPanel {
     }
 
     public void reverseBoard(int row, int col) {
+        Step step = new Step(new Position(row, col), GameFrame.controller.getMode());
+
         ChessPiece currentPlayer = chessGrids[row][col].getChessPiece();
         List<Integer> availableDir = getAvailableDir(row, col, currentPlayer);
-        for (int i = 0; i < CHESS_COUNT; ++i)
-            for (int j = 0; j < CHESS_COUNT; ++j) 
-                chessGrids[i][j].setSwaped(false);
 
         for (int d : availableDir) {
             int nextX = row+dir[d][0], nextY = col+dir[d][1];
@@ -118,12 +146,16 @@ public class ChessBoardPanel extends JPanel {
                     
                     SoundUtility.playSE(FilePath.reverseSE2);
 
-                    chessGrids[nextX][nextY].setChessPiece(currentPlayer);
+                    // chessGrids[nextX][nextY].setChessPiece(currentPlayer);
                     chessGrids[nextX][nextY].reversePiece();
+                    step.addFlip(new Position(nextX, nextY));
+
                     nextX += dir[d][0];
                     nextY += dir[d][1];
             }
         }
+
+        stepStack.push(step);
         repaint();
     }
 
@@ -140,5 +172,26 @@ public class ChessBoardPanel extends JPanel {
             GameFrame.controller.swapPlayer();
         }
         return ;
+    }
+
+    public void undo() {
+        if (stepStack.empty()) return ;
+
+        Step step = stepStack.pop();
+        Position p = step.getPutPosition();
+        chessGrids[p.x][p.y].setChessPiece(null);
+        paintImmediately(0, 0, this.getWidth(), this.getHeight());
+        Iterator<Position> flipP = step.getFlipPosition().iterator();
+
+        while (flipP.hasNext()) {
+            p = flipP.next();
+            chessGrids[p.x][p.y].reversePiece();
+        }
+        if (step.getMode() != GameMode.CHEAT) {
+            GameFrame.controller.swapPlayer();
+        }
+        GameFrame.controller.getGamePanel().recountAvailableGrids();
+
+        repaint();
     }
 }

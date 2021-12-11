@@ -4,12 +4,15 @@ import javax.swing.JOptionPane;
 
 import components.ChessGridComponent;
 import view.ChessBoardPanel;
+import model.Archive;
 import model.ChessPiece;
 import model.GameMode;
+import model.GameStatus;
+import model.Position;
+import model.Step;
 import view.*;
 
 public class GameController {
-
 
     private ChessBoardPanel gamePanel;
     private StartFrame startFrame;
@@ -37,10 +40,13 @@ public class GameController {
     //     this.statusPanel = statusPanel;
     // }
 
-    private boolean endCheck() {
-        return blackScore == 0 
-        || whiteScore == 0 
-        || blackScore + whiteScore == ChessBoardPanel.CHESS_COUNT*ChessBoardPanel.CHESS_COUNT;
+    public GameStatus endCheck() {
+        if (blackScore == 0) return GameStatus.WHITE_WIN;
+        else if (whiteScore == 0) return GameStatus.BLACK_WIN;
+        else if (blackScore + whiteScore == ChessBoardPanel.CHESS_COUNT*ChessBoardPanel.CHESS_COUNT) {
+            if (blackScore == whiteScore) return GameStatus.TIE;
+            else return blackScore > whiteScore ? GameStatus.BLACK_WIN : GameStatus.WHITE_WIN;
+        } else return GameStatus.NONE;
     }
 
     public void swapPlayer() {
@@ -49,7 +55,7 @@ public class GameController {
         statusPanel.setPlayerText(currentPlayer.name());
         statusPanel.setScoreText(blackScore, whiteScore);
         
-        if (endCheck()) {
+        if (endCheck() != GameStatus.NONE) {
             //todo
             JOptionPane.showMessageDialog(null, "End");
         }
@@ -94,14 +100,22 @@ public class GameController {
         return startFrame;
     }
 
-
-    public void readFileData(String fileName) {
-    }
-
-    public void writeDataToFile(String fileName) {
-    }
-
     public boolean canClick(int row, int col) {
         return gamePanel.canClickGrid(row, col, currentPlayer);
+    }
+
+    public boolean putPiece(Step step) {
+        Position p = step.getPutPosition();
+        if (gamePanel.canClickGrid(p.x, p.y, currentPlayer)) {
+            gamePanel.getChessGrids()[p.x][p.y].setChessPiece(currentPlayer);
+            gamePanel.paintImmediately(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
+            gamePanel.reverseBoard(p.x, p.y);
+            if (GameFrame.controller.getMode() == GameMode.NON_CHEAT)
+                    GameFrame.controller.swapPlayer();
+            GameFrame.controller.getGamePanel().recountAvailableGrids();
+            gamePanel.paintImmediately(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
+            return true;
+        }
+        return false;
     }
 }
